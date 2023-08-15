@@ -34,5 +34,16 @@ psect   barfunc,local,class=CODE,delta=2 ; PIC10/12/16
 
 global _bar ; extern of bar function goes in the C source file
 _bar:
-    movf PORTA,w    ; here we use a symbol defined via xc.inc
+    CLRF	PORTA
+    CLRF	PORTB
+    
+    MOVLW	0x07
+    MOVWF	CMCON
+    
+    BCF		STATUS, 6
+    BSF		STATUS, 5
+    
+    MOVLW	0x1F
+    
+    MOVWF	TRISA
     return
