@@ -46,4 +46,18 @@ _bar:
     MOVLW	0x1F
     
     MOVWF	TRISA
+    
+    MOVLW	0x00
+    
+    MOVWF	TRISB
+    
+    BCF		STATUS, 6
+    BCF		STATUS, 5
+    
+principal:
+    
+    MOVLW	0xFF
+    MOVWF	PORTB
+    GOTO	principal
+
     return
