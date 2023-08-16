@@ -31,6 +31,12 @@
 
 psect   barfunc,local,class=CODE,delta=2 ; PIC10/12/16
 ; psect   barfunc,local,class=CODE,reloc=2 ; PIC18
+  
+
+    hundreds	EQU	0x0C
+    tens	EQU	0x0D
+    units	EQU	0x0E
+  
 
 global _bar ; extern of bar function goes in the C source file
 _bar:
@@ -40,24 +46,63 @@ _bar:
     MOVLW	0x07
     MOVWF	CMCON
     
-    BCF		STATUS, 6
-    BSF		STATUS, 5
+    BCF		STATUS, 6	;Go to
+    BSF		STATUS, 5	;Bank 1
     
     MOVLW	0x1F
     
-    MOVWF	TRISA
+    MOVWF	TRISA		;Set PORTA direction.
     
     MOVLW	0x00
     
-    MOVWF	TRISB
+    MOVWF	TRISB		;Set PORTB direction.
     
-    BCF		STATUS, 6
-    BCF		STATUS, 5
+    BCF		STATUS, 6	;Change to
+    BCF		STATUS, 5	;Bank 0
     
 principal:
     
-    MOVLW	0xFF
+    CLRF	hundreds	;Clean memory
+    CLRF	tens
+    CLRF	units
+    
+    
+    MOVF	PORTA,W
+    MOVWF	units
+    
+bcd_sub10:
+    
+    MOVLW	10
+    SUBWF	units,W
+    BTFSS	STATUS,0
+    GOTO	bcd_end
+    
+bcd_IncTen:
+    
+    MOVWF	units
+    INCF	tens,F
+    MOVF	tens,W
     MOVWF	PORTB
+    
+loop:
+    GOTO	loop
+    ;MOVLW	10
+    ;SUBWF	tens,W
+    ;BTFSS	STATUS,0
+    ;GOTO	bcd_sub10
+    
+;bcd_IncHun:
+    
+    ;CLRF	tens
+    ;INCF	hundreds,F
+    ;GOTO	bcd_sub10
+    
+bcd_end:
+    
+    ;SWAPF	tens,W
+    ;ADDWF	units,W
+    ;MOVWF	PORTB
+    
     GOTO	principal
-
+    
     return

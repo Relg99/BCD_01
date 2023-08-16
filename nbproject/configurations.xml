@@ -202,6 +202,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-7ff"/>
         <property key="poweroptions.powerenable" value="true"/>
+        <property key="programmerToGoFilePath"
+                  value="/home/richo/MPLABXProjects/BCD_01.X/debug/default/BCD_01_ptg"/>
         <property key="programmerToGoImageName" value="BCD_01_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
