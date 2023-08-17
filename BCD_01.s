@@ -32,10 +32,13 @@
 psect   barfunc,local,class=CODE,delta=2 ; PIC10/12/16
 ; psect   barfunc,local,class=CODE,reloc=2 ; PIC18
   
-
-    hundreds	EQU	0x0C
-    tens	EQU	0x0D
-    units	EQU	0x0E
+    ;NOTE TO FUTURE SELF:
+    ;CHECK DATASHEET FOR
+    ;GENERAL PURPOSE REGISTER
+    
+    hundreds	EQU	0x20
+    tens	EQU	0x21
+    units	EQU	0x22
   
 
 global _bar ; extern of bar function goes in the C source file
@@ -62,34 +65,29 @@ _bar:
     
 principal:
     
-    CLRF	hundreds	;Clean memory
+    CLRF	hundreds
     CLRF	tens
     CLRF	units
     
     
-    MOVF	PORTA,W
-    MOVWF	units
+    MOVF	PORTA,W		;Read input from 
+    MOVWF	units		;DIP switches
     
 bcd_sub10:
     
     MOVLW	10
     SUBWF	units,W
-    BTFSS	STATUS,0
+    BTFSS	STATUS,0	;Check for carry bit.
     GOTO	bcd_end
     
 bcd_IncTen:
     
     MOVWF	units
-    INCF	tens,F
-    MOVF	tens,W
-    MOVWF	PORTB
-    
-loop:
-    GOTO	loop
-    ;MOVLW	10
-    ;SUBWF	tens,W
-    ;BTFSS	STATUS,0
-    ;GOTO	bcd_sub10
+    INCF	tens
+    MOVLW	10
+    SUBWF	tens,W
+    BTFSS	STATUS,0	;Check for carry bit.
+    GOTO	bcd_sub10
     
 ;bcd_IncHun:
     
@@ -99,9 +97,9 @@ loop:
     
 bcd_end:
     
-    ;SWAPF	tens,W
-    ;ADDWF	units,W
-    ;MOVWF	PORTB
+    SWAPF	tens,W
+    ADDWF	units,W
+    MOVWF	PORTB
     
     GOTO	principal
     
