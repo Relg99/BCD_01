@@ -34,7 +34,7 @@ psect   barfunc,local,class=CODE,delta=2 ; PIC10/12/16
   
     ;NOTE TO FUTURE SELF:
     ;CHECK DATASHEET FOR
-    ;GENERAL PURPOSE REGISTER
+    ;GENERAL PURPOSE REGISTERS
     
     hundreds	EQU	0x20
     tens	EQU	0x21
@@ -65,7 +65,7 @@ _bar:
     
 principal:
     
-    CLRF	hundreds
+    CLRF	hundreds	;Clear registers
     CLRF	tens
     CLRF	units
     
@@ -89,17 +89,17 @@ bcd_IncTen:
     BTFSS	STATUS,0	;Check for carry bit.
     GOTO	bcd_sub10
     
-;bcd_IncHun:
+bcd_IncHun:
     
-    ;CLRF	tens
-    ;INCF	hundreds,F
-    ;GOTO	bcd_sub10
+    CLRF	tens
+    INCF	hundreds
+    GOTO	bcd_sub10
     
 bcd_end:
     
-    SWAPF	tens,W
-    ADDWF	units,W
-    MOVWF	PORTB
+    SWAPF	tens,W		;Place tens in upper half
+    ADDWF	units,W		;Place units in lower half
+    MOVWF	PORTB		;Show result in display.
     
     GOTO	principal
     
